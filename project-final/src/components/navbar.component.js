@@ -36,6 +36,11 @@ export default class Navbar extends Component {
                 New Vendor
               </Link>
             </li>
+            <li>
+              <Link to="/reviews" className="nav-link ml-3">
+                Reviews
+              </Link>
+            </li>
           </ul>
           <form className="form-inline mt-2 mt-md-0">
             <input

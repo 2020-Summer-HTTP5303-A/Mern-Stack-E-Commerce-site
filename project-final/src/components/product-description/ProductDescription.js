@@ -10,6 +10,9 @@ export default class ProductDescription extends Component {
   constructor(props) {
     super(props);
 
+    this.onChangeReview = this.onChangeReview.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
     this.state = {
       name: "",
       vendor: "",
@@ -18,8 +21,19 @@ export default class ProductDescription extends Component {
       image: "",
       date: new Date(),
       vendors: [],
+      review: "",
+      submittedReview: ""
     };
   }
+
+  onChangeReview(e) {
+    e.preventDefault();
+
+    this.setState({
+      review: e.target.value,
+    });
+  }
+
 
   componentDidMount() {
     axios
@@ -45,7 +59,41 @@ export default class ProductDescription extends Component {
         });
       }
     });
+
+    axios
+    .get("http://localhost:5000/reviews/" + this.props.match.params.id)
+    .then((response) => {
+      this.setState({
+        submittedReview: response.data.review,
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const reviewBody = { 
+      review: this.state.review
+    };
+
+    axios
+      .post("http://localhost:5000/reviews/add/"+this.props.match.params.id, reviewBody)
+      .then( (response) => {
+        this.setState({
+          submittedReview: this.state.review,
+        })
+      })
+      .catch(function (error) {
+        console.log("error: " + error);
+      });
+
+
+
+  }
+
 
   render() {
     return (
@@ -125,7 +173,7 @@ export default class ProductDescription extends Component {
                   <div class="tab-content">
                     <div class="tab-pane active " id="more-information">
                       <br />
-                      <strong>Description Title</strong>
+                      <strong>Description</strong>
                       <p>{this.state.description}</p>
                     </div>
                     <div class="tab-pane fade" id="specifications">
@@ -133,16 +181,18 @@ export default class ProductDescription extends Component {
                     </div>
                     <div class="tab-pane fade" id="reviews">
                       <br />
+                      {this.state.submittedReview} 
                       <form
-                        method="post"
                         class="well padding-bottom-10"
-                        onsubmit="return false;"
+                        onSubmit={this.onSubmit}
                       >
-                        <textarea
-                          rows="2"
-                          class="form-control mb-2"
-                          placeholder="Write a review"
-                        ></textarea>
+                      <input
+                        type="text"
+                        required
+                        className="form-control"
+                        value={this.state.review}
+                        onChange={this.onChangeReview}
+                      />
                         <div class="margin-top-10 ">
                           <button
                             type="submit"

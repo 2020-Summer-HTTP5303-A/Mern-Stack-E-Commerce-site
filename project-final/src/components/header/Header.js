@@ -6,7 +6,7 @@ function Header() {
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
         <div class="container">
-          <a class="navbar-brand" href="/Home">
+          <a class="navbar-brand" href="/">
             <img src={logo} id="logo" alt="" />
           </a>
           <div class="Header-navbar-search  col-sm-5 col-xs-10">
